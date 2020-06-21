@@ -1,0 +1,75 @@
+
+#Working
+{
+  "application_lead": "Sally Sue",
+  "asg_instance_size": "t2.small",
+  "asg_max_size": "10",
+  "asg_min_size": "3",
+  "billing_code": "342647563",
+  "environment": "production",
+  "network_lead": "Mary Moe",
+  "project_code": "8675309",
+  "ProjectEnvironment": "production-8675309",
+  "rds_db_name": "wordpress",
+  "rds_engine": "mysql",
+  "rds_instance_size": "db.t2.small",
+  "rds_multi_az": "false",
+  "rds_storage_size": "10",
+  "rds_version": "5.6.37",
+  "vpc_cidr_range": "10.0.0.0/16",
+  "vpc_subnet_count": "2"
+}
+
+{
+  "application_lead": {
+    "S": "Sally Sue"
+  },
+  "asg_instance_size": {
+    "S": "t2.small"
+  },
+  "asg_max_size": {
+    "S": "3"
+  },
+  "asg_min_size": {
+    "S": "10"
+  },
+  "billing_code": {
+    "S": "342647563"
+  },
+  "environment": {
+    "S": "production"
+  },
+  "network_lead": {
+    "S": "Mary Moe"
+  },
+  "project_code": {
+    "S": "8675309"
+  },
+  "ProjectEnvironment": {
+    "S": "production-8675309"
+  },
+  "rds_db_name": {
+    "S": "wordpress"
+  },
+  "rds_engine": {
+    "S": "mysql"
+  },
+  "rds_instance_size": {
+    "S": "db.t2.small"
+  },
+  "rds_multi_az": {
+    "S": "false"
+  },
+  "rds_storage_size": {
+    "S": "10"
+  },
+  "rds_version": {
+    "S": "5.6.37"
+  },
+  "vpc_cidr_range": {
+    "S": "10.1.0.0/16"
+  },
+  "vpc_subnet_count": {
+    "S": "2"
+  }
+}
