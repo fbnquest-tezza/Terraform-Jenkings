@@ -13,7 +13,7 @@ pipeline {
         
     }
     environment {
-        TF_HOME = tool('terraform')
+        TF_HOME = tool('terraform-12')
         TF_IN_AUTOMATION = "true"
         PATH = "$TF_HOME:$PATH"
         NETWORKING_ACCESS_KEY = credentials('networking_access_key')
@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('NetworkInit'){
             steps {
-                dir('module5/4-networking/'){
+                dir('4-networking/'){
                     // sh 'terraform --version'
                     bat label: '', script: 'terraform --version'
                     // sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \
@@ -42,7 +42,7 @@ pipeline {
         }
         stage('NetworkPlan'){
             steps {
-                dir('module5/4-networking/'){
+                dir('4-networking/'){
                     script {
                         try {
                         //    sh "terraform workspace new ${params.WORKSPACE}"
@@ -75,7 +75,7 @@ pipeline {
                         apply = true
                     } catch (err) {
                         apply = false
-                        dir('module5/4-networking'){
+                        dir('4-networking'){
                             // sh "terraform destroy -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
                             //  -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
                             //  -var 'url=${params.LAMBDA_URL}' \
@@ -92,7 +92,7 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
-                        dir('module5/4-networking'){
+                        dir('4-networking'){
                             unstash "terraform-networking-plan"
                             // sh 'terraform apply terraform-networking.tfplan'
                             bat label: '', script: 'terraform apply terraform-networking.tfplan'

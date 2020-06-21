@@ -15,7 +15,7 @@ pipeline {
 
     }
     environment {
-        TF_HOME = tool('terraform')
+        TF_HOME = tool('terraform-12')
         TF_IN_AUTOMATION = "true"
         PATH = "$TF_HOME:$PATH"
         APPLICATION_ACCESS_KEY = credentials('application_access_key')
@@ -24,7 +24,7 @@ pipeline {
     stages {
         stage('ApplicationInit'){
             steps {
-                dir('module5/5-applications/'){
+                dir('5-applications/'){
                     // sh "terraform init -input=false -plugin-dir=C:/jenkins/terraform_plugins\
                     //  --backend-config='dynamodb_table=${params.DYNAMODB_STATELOCK}' --backend-config='bucket=${params.APPLICATION_BUCKET}' \
                     //  --backend-config='access_key=$APPLICATION_ACCESS_KEY' --backend-config='secret_key=$APPLICATION_SECRET_KEY' \
@@ -42,7 +42,7 @@ pipeline {
         }
         stage('ApplicationPlan'){
             steps {
-                dir('module5/5-applications/'){
+                dir('5-applications/'){
                     script {
                         try {
                             // sh "terraform workspace new ${params.WORKSPACE}"
@@ -77,7 +77,7 @@ pipeline {
                         apply = true
                     } catch (err) {
                         apply = false
-                        dir('module5/5-applications'){
+                        dir('5-applications'){
                             // sh "terraform destroy -var 'aws_access_key=$APPLICATION_ACCESS_KEY' \
                             //  -var 'aws_secret_key=$APPLICATION_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' \
                             //  -var 'region=${params.REGION}' -var 'tablename=${params.DATASOURCE}' \
@@ -92,7 +92,7 @@ pipeline {
                          currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
-                        dir('module5/5-applications'){
+                        dir('5-applications'){
                             unstash "terraform-application-plan"
                             // sh 'terraform apply terraform-application.tfplan'
                             bat label: '', script: 'terraform apply terraform-application.tfplan'
