@@ -23,13 +23,20 @@ pipeline {
         stage('NetworkInit'){
             steps {
                 dir('module5/4-networking/'){
-                    sh 'terraform --version'
-                    sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \
-                     --backend-config='dynamodb_table=${params.DYNAMODB_STATELOCK}' --backend-config='bucket=${params.NETWORKING_BUCKET}' \
-                     --backend-config='access_key=$NETWORKING_ACCESS_KEY' --backend-config='secret_key=$NETWORKING_SECRET_KEY' \
-                     --backend-config='region=${params.REGION}'"
-                    sh "echo \$PWD"
-                    sh "whoami"
+                    // sh 'terraform --version'
+                    bat label: '', script: 'terraform --version'
+                    // sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \
+                    //  --backend-config='dynamodb_table=${params.DYNAMODB_STATELOCK}' --backend-config='bucket=${params.NETWORKING_BUCKET}' \
+                    //  --backend-config='access_key=$NETWORKING_ACCESS_KEY' --backend-config='secret_key=$NETWORKING_SECRET_KEY' \
+                    //  --backend-config='region=${params.REGION}'"
+                    bat label: '', script: '''terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \\
+                     --backend-config=\'dynamodb_table=${params.DYNAMODB_STATELOCK}\' --backend-config=\'bucket=${params.NETWORKING_BUCKET}\' \\
+                     --backend-config=\'access_key=$NETWORKING_ACCESS_KEY\' --backend-config=\'secret_key=$NETWORKING_SECRET_KEY\' \\
+                     --backend-config=\'region=${params.REGION}\''''
+                    // sh "echo \$PWD"
+                    bat label: '', script: 'echo \\$PWD'
+                    // sh "whoami"
+                    bat label: '', script: 'whoami'
                 }
             }
         }
@@ -38,15 +45,22 @@ pipeline {
                 dir('module5/4-networking/'){
                     script {
                         try {
-                           sh "terraform workspace new ${params.WORKSPACE}"
+                        //    sh "terraform workspace new ${params.WORKSPACE}"
+                        bat label: '', script: 'terraform workspace new ${params.WORKSPACE}'
                         } catch (err) {
-                            sh "terraform workspace select ${params.WORKSPACE}"
+                            // sh "terraform workspace select ${params.WORKSPACE}"
+                            bat label: '', script: 'terraform workspace select ${params.WORKSPACE}'
                         }
-                        sh "terraform plan -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
-                          -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
-                          -var 'url=${params.LAMBDA_URL}' -var 'region=${params.REGION}' \
-                          -var 'tablename=${params.DATASOURCE}' \
-                          -input=false -out terraform-networking.tfplan;echo \$? > status"
+                        // sh "terraform plan -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
+                        //   -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
+                        //   -var 'url=${params.LAMBDA_URL}' -var 'region=${params.REGION}' \
+                        //   -var 'tablename=${params.DATASOURCE}' \
+                        //   -input=false -out terraform-networking.tfplan;echo \$? > status"
+                        bat label: '', script: '''terraform plan -var \'aws_access_key=$NETWORKING_ACCESS_KEY\' \\
+                          -var \'aws_secret_key=$NETWORKING_SECRET_KEY\' \\
+                          -var \'url=${params.LAMBDA_URL}\' -var \'region=${params.REGION}\' \\
+                          -var \'tablename=${params.DATASOURCE}\' \\
+                          -input=false -out terraform-networking.tfplan;echo \\$? > status'''
                         stash name: "terraform-networking-plan", includes: "terraform-networking.tfplan"
                     }
                 }
@@ -62,19 +76,26 @@ pipeline {
                     } catch (err) {
                         apply = false
                         dir('module5/4-networking'){
-                            sh "terraform destroy -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
-                             -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
-                             -var 'url=${params.LAMBDA_URL}' \
-                             -var 'region=${params.REGION}' \
-                             -var 'tablename=${params.DATASOURCE}' \
-                             -auto-approve"
+                            // sh "terraform destroy -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
+                            //  -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
+                            //  -var 'url=${params.LAMBDA_URL}' \
+                            //  -var 'region=${params.REGION}' \
+                            //  -var 'tablename=${params.DATASOURCE}' \
+                            //  -auto-approve"
+                            bat label: '', script: '''terraform destroy -var \'aws_access_key=$NETWORKING_ACCESS_KEY\' \\
+                             -var \'aws_secret_key=$NETWORKING_SECRET_KEY\' \\
+                             -var \'url=${params.LAMBDA_URL}\' \\
+                             -var \'region=${params.REGION}\' \\
+                             -var \'tablename=${params.DATASOURCE}\' \\
+                             -auto-approve'''
                         }
                         currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
                         dir('module5/4-networking'){
                             unstash "terraform-networking-plan"
-                            sh 'terraform apply terraform-networking.tfplan'
+                            // sh 'terraform apply terraform-networking.tfplan'
+                            bat label: '', script: 'terraform apply terraform-networking.tfplan'
                         }
                     }
                 }
