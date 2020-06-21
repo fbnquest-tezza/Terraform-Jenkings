@@ -29,7 +29,7 @@ pipeline {
                     //  --backend-config='dynamodb_table=${params.DYNAMODB_STATELOCK}' --backend-config='bucket=${params.NETWORKING_BUCKET}' \
                     //  --backend-config='access_key=$NETWORKING_ACCESS_KEY' --backend-config='secret_key=$NETWORKING_SECRET_KEY' \
                     //  --backend-config='region=${params.REGION}'"
-                    bat label: '', script: '''terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \\
+                    bat label: '', script: '''terraform init -input=false -plugin-dir=C:/jenkins/terraform_plugins \\
                      --backend-config=\'dynamodb_table=${params.DYNAMODB_STATELOCK}\' --backend-config=\'bucket=${params.NETWORKING_BUCKET}\' \\
                      --backend-config=\'access_key=$NETWORKING_ACCESS_KEY\' --backend-config=\'secret_key=$NETWORKING_SECRET_KEY\' \\
                      --backend-config=\'region=${params.REGION}\''''
